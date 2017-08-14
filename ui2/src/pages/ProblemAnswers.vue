@@ -39,6 +39,9 @@
           <div v-if="!canAnswer" class="overlay">
             {{ scoringCompleteTime | dateRelative }}に解答送信が可能になります。
           </div>
+          <div v-if="!canPost" class="overlay">
+            解答を送信してください。
+          </div>
         </div>
         <div v-if="confirming" class="confirm">
           <p>以下の内容で解答を送信しますか？</p>
@@ -188,6 +191,15 @@ export default {
     // 回答可能かどうか
     canAnswer () {
       return this.scoringCompleteTime < new Date(this.currentDate).valueOf();
+    },
+    postingAnswers () {
+      return this.answers
+        .filter(ans => `${ans.problem_id}` === this.problemId)
+        .filter(ans => !ans.completed)
+    },
+    // 投稿可能かどうか
+    canPost () {
+      return this.postingAnswers.length === 0;
     },
     // 採点が完了する時間(ms)
     scoringCompleteTime () {
