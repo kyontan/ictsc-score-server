@@ -142,13 +142,14 @@ class Score < ActiveRecord::Base
     end
   end
 
-  def self.teams_scores(user:, action: '', aggregate: false)
+  def self.teams_scores(user:, action: '', aggregate: false, only_solved: false)
     Score.readables(user: user, action: action, aggregate: aggregate)
       .joins(answer: :problem).reply_delay
       .group_by{|e| [e.problem.id, e.answer.team.id] }
       .each_with_object({}) {|(key, value), memo|
         s_a_p = value.max_by{|s| s.answer.created_at }
         dict_key = { problem_id: key[0], team_id: key[1] }
+        next if only_solved && s_a_p.point < s_a_p.problem.reference_point
         memo[dict_key] = { point: s_a_p.point, reference_point: s_a_p.problem.reference_point }
       }
   end
