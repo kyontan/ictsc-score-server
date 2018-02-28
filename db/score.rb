@@ -188,7 +188,7 @@ class Score::Scores < Array
 
     # [{1st_team_id, score}, {2nd_team_id, score}, {3rd_team_id, score}, ...]
     [
-      Score.readables(user: user, aggregate: true).joins(:answer).group("answers.team_id").sum(:point),
+      Score.teams_scores(user: Member.find_by(role_id: 2) ).sort_by{|(k,v)| k[:team_id] }.each_with_object(Hash.new(0)){|(k,v), memo| memo[k[:team_id]] += v[:point] },
       Score.cleared_problem_group_bonuses(with_tid: true).map{|team_id, hash| [team_id, hash.values.sum] }
     ]
       .flat_map(&:to_a)
