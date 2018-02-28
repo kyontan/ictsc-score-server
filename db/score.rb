@@ -142,6 +142,17 @@ class Score < ActiveRecord::Base
     end
   end
 
+  def self.teams_scores(user:, action: '', aggregate: false)
+    Score.readables(user: user, action: action, aggregate: aggregate)
+      .joins(answer: :problem).reply_delay
+      .group_by{|e| [e.problem.id, e.answer.team.id] }
+      .each_with_object({}) {|(key, value), memo|
+        s_a_p = value.max_by{|s| s.answer.created_at }
+        dict_key = { problem_id: key[0], team_id: key[1] }
+        memo[dict_key] = { point: s_a_p.point, reference_point: s_a_p.problem.reference_point }
+      }
+  end
+
   scope :reply_delay, ->() {
      where('answers.created_at <= :time', { time:  DateTime.now - Setting.answer_reply_delay_sec.seconds})
   }
