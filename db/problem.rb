@@ -54,9 +54,9 @@ class Problem < ActiveRecord::Base
 
       relation = left_outer_joins(problem_must_solve_before: [:first_correct_answer])
 
-      relation.where(problem_must_solve_before_id: nil).or(
-        relation.merge(FirstCorrectAnswer.where.not(team_id: nil))
-      )
+      relation.where(problem_must_solve_before_id: nil)
+        .or(relation.merge(FirstCorrectAnswer.where.not(team_id: nil).where('public_at <= :time', { time:  DateTime.now  }) ))
+
     when ROLE_ID[:viewer]
       all
     else

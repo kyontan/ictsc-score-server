@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180227130510) do
+ActiveRecord::Schema.define(version: 20180228193244) do
 
   create_table "answers", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.integer "problem_id", null: false
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20180227130510) do
     t.bigint "team_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "public_at", null: false
     t.index ["problem_id"], name: "index_first_correct_answers_on_problem_id", unique: true
     t.index ["team_id"], name: "index_first_correct_answers_on_team_id"
   end

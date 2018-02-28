@@ -114,7 +114,8 @@ class Score < ActiveRecord::Base
     team = answer.team
     problem_point = team.answers.joins(:score).where(problem: problem, team: team).sum(:point)
     if problem_point >= problem.reference_point
-      FirstCorrectAnswer.create!(team: team, problem: problem)
+      # problemとくっついてるし public_at とか追加したほうが良さげ
+      FirstCorrectAnswer.create!(team: team, problem: problem, public_at: answer.created_at + Setting.answer_reply_delay_sec.seconds)
     end
   end
 
