@@ -28,7 +28,7 @@
 
 <script>
 import { API } from '../utils/Api'
-import { tickDuration } from '../utils/Filters'
+import { tickDuration, latestAnswer } from '../utils/Filters'
 import * as d3 from 'd3'
 import { mapGetters } from 'vuex'
 
@@ -70,10 +70,9 @@ export default {
   watch: {
     problems (val) {
       try {
-        this.sumPurePoint = val.reduce((p, n) => p + n.perfect_point, 0);
+        this.sumPurePoint = ((e) => e.perfect_point ? e.perfect_point : 0)(latestAnswer(val))
 
-        var scores = answers => answers ? answers
-          .reduce((p, n) => p + (n.score ? n.score.point : 0), 0) : 0;
+        var scores = answers => ((e) => e.score ? e.score.point : 0)(latestAnswer(answers));
         this.scoredPurePoint = val
           .reduce((p, n) => p + scores(n.answers), 0);
       } catch (err) {

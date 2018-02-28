@@ -62,6 +62,7 @@
 import { SET_TITLE } from '../store/'
 import { API } from '../utils/Api'
 import { mapGetters } from 'vuex'
+import { latestAnswer } from '../utils/Filters'
 
 export default {
   name: 'team-detail',
@@ -97,9 +98,8 @@ export default {
   methods: {
     point (problemId) {
       try {
-        return this.team.answers
-          .filter(ans => ans.problem_id === problemId)
-          .reduce((p, n) => p + n.score.subtotal_point, 0);
+        return ((e) => e.score ? e.score.subtotal_point : 0)(latestAnswer(
+          this.team.answers.filter(ans => ans.problem_id === problemId)))
       } catch (e) {
         return '---'
       }

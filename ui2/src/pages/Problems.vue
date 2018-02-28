@@ -406,7 +406,7 @@ import MessageBox from '../components/MessageBox'
 import SimpleMarkdownEditor from '../components/SimpleMarkdownEditor'
 import { mapGetters } from 'vuex'
 import { Emit, PUSH_NOTIF, REMOVE_NOTIF } from '../utils/EventBus'
-import { dateRelative } from '../utils/Filters'
+import { dateRelative, latestAnswer } from '../utils/Filters'
 
 export default {
   name: 'problems',
@@ -539,16 +539,13 @@ export default {
       if (!this.session.member) return nothing;
       if (!answers) return nothing;
       if (this.contest && (new Date(this.contest.competition_end_at) < Date.now())) return nothing;
-      return answers
-        .reduce((p, n) => ({
-          pure: p.pure + ((n.score && n.score.point) || 0),
-          bonus: p.bonus + ((n.score && n.score.bonus_point) || 0),
-          subtotal: p.subtotal + ((n.score && n.score.subtotal_point) || 0),
-        }), {
-          pure: 0,
-          bonus: 0,
-          subtotal: 0,
-        });
+      return ((e) => {
+        return {
+          pure: e && e.score ? e.score.point : 0,
+          bonus: e && e.score ? e.score.bonus_point : 0,
+          subtotal: e && e.score ? e.score.subtotal_point : 0
+        }
+      })(latestAnswer(answers))
     },
     problemUnlockConditionTitle (id) {
       var found = this.problems.find(p => p.id === id);

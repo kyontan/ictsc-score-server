@@ -34,6 +34,7 @@ import { SET_TITLE } from '../store/'
 import Graph from '../components/Graph'
 import { API } from '../utils/Api'
 import * as d3 from 'd3';
+import { latestAnswer } from '../utils/Filters'
 
 window.d3 = d3;
 
@@ -58,9 +59,8 @@ export default {
         var completedAnswers = t.answers
           .filter(ans => ans.completed_at && ans.completed);
         // 積算の点数を計算する関数
-        var getPileSubtotal = (ans, date) => ans
-          .filter(a => new Date(a.completed_at).valueOf() <= new Date(date).valueOf())
-          .reduce((p, n) => p + (n.score ? n.score.subtotal_point : 0), 0);
+        var getPileSubtotal = (ans, date) => ((e) => e.score ? e.score.subtotal_point : 0)(
+          latestAnswer(ans.filter(a => new Date(a.completed_at).valueOf() <= new Date(date).valueOf())))
         var answers = completedAnswers
           .map(ans => ({
             problem: ans.problem_id,
