@@ -154,6 +154,10 @@ class Score < ActiveRecord::Base
       }
   end
 
+  def self.solved_teams_counts(user:, action: '')
+    Score.teams_scores(user: user, action: action, only_solved: true, aggregate: true).each_with_object(Hash.new(0)) {|(k,_), memo| memo[k[:problem_id]] += 1 }
+  end
+
   scope :reply_delay, ->() {
      where('answers.created_at <= :time', { time:  DateTime.now - Setting.answer_reply_delay_sec.seconds})
   }
