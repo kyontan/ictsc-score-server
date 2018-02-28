@@ -57,3 +57,7 @@ export function tickDuration (date) {
   return moment.utc(date)
     .format('HH:mm:ss')
 }
+
+export function latestAnswer (ans) {
+  return ans ? ans.reduce((p, n) => Date.parse(p.updated_at) < Date.parse(n.updated_at) ? n : p, {updated_at: 0}) : ans;
+}

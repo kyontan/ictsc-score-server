@@ -82,6 +82,7 @@
 <script>
 import { SET_TITLE } from '../store/'
 import { API } from '../utils/Api'
+import { latestAnswer } from '../utils/Filters'
 
 export default {
   name: 'answers',
@@ -132,8 +133,7 @@ export default {
         .reduce((p, n) => Math.min(p, n.score ? 4 : 2), 4);
     },
     score (answers, teamId, problemId) {
-      return this.teamAnswers(answers, teamId, problemId)
-        .reduce((p, n) => p + (n.score ? n.score.subtotal_point : 0), 0)
+      return ((e) => e.score ? e.score.subtotal_point : 0)(latestAnswer(this.teamAnswers(answers, teamId, problemId)))
     },
   },
 }

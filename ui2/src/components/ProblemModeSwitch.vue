@@ -34,6 +34,7 @@
 
 <script>
 import { SET_TITLE } from '../store/'
+import { latestAnswer } from '../utils/Filters'
 
 export default {
   name: 'problem-mode-switch',
@@ -55,8 +56,7 @@ export default {
         .filter(i => '' + i.team_id === this.teamId)
     },
     point () {
-      return this.currentAnswers
-        .reduce((p, n) => p + (n.score ? n.score.subtotal_point : 0), 0);
+      return ((e) => e.score ? e.score.subtotal_point : 0)(latestAnswer(this.currentAnswers))
     },
   },
   watch: {
