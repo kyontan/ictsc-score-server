@@ -114,11 +114,15 @@ class Score < ActiveRecord::Base
     problem = answer.problem
     team = answer.team
     if answer.score.solved
-      FirstCorrectAnswer.create(team: team, problem: problem, answer: answer) unless FirstCorrectAnswer.where(team: team, problem: problem)
+      FirstCorrectAnswer.create!(team: team, problem: problem, answer: answer) unless FirstCorrectAnswer.where(team: team, problem: problem).first
     else
-      FirstCorrectAnswer.delete(team: team, problem: problem) # 採点修正
-      ans = Answer.where(team: team, problem: problem).joins(:score).where(scores: {solved: true}).order(:created_at).first
-      FirstCorrectAnswer.create(team: team, problem: problem, answer: ans) if ans
+      # 採点修正
+      fca = FirstCorrectAnswer.where(team: team, problem: problem).first
+      if fca
+        fca.destroy
+        ans = Answer.where(team: team, problem: problem).joins(:score).where(scores: {solved: true}).order(:created_at).first
+        FirstCorrectAnswer.create!(team: team, problem: problem, answer: ans) if ans  
+      end
     end
   end
 

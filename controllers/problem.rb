@@ -37,7 +37,7 @@ class ProblemRoutes < Sinatra::Base
 
     solved_teams_count_by_problem = FirstCorrectAnswer \
       .readables \
-      .inject(Hash.new(0)){|a, fca| a[fca.team_id] += 1; a}
+      .inject(Hash.new(0)){|a, fca| a[fca.problem_id] += 1; a}
 
     cleared_pg_bonuses = Score.cleared_problem_group_bonuses(team_id: current_user&.team_id)
 
