@@ -36,6 +36,12 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-2 col-form-label">表示順序<br/>(低いほうが先)</label>
+            <div class="col-10">
+              <input v-model="problem.order" class="form-control" type="number">
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-2 col-form-label">作問者</label>
             <div class="col-10">
               <select class="form-control" v-model="problem.creator_id">

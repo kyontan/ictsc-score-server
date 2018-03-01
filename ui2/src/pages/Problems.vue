@@ -49,6 +49,12 @@
             </select>
           </div>
         </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">表示順序<br/>(低いほうが先)</label>
+          <div class="col-sm-9">
+            <input v-model="newProblemObj.order" type="number" class="form-control">
+          </div>
+        </div>
 
         <simple-markdown-editor v-model="newProblemObj.text"></simple-markdown-editor>
       </div>
@@ -423,6 +429,7 @@ export default {
         reference_point: 0,
         perfect_point: 0,
         problem_group_ids: [],
+        order: 0,
         problem_must_solve_before_id: null,
       },
       newGroupObj: {
