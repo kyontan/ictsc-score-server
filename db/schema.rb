@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180227130510) do
+ActiveRecord::Schema.define(version: 20180301095347) do
 
   create_table "answers", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4" do |t|
     t.integer "problem_id", null: false
@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(version: 20180227130510) do
     t.integer "problem_must_solve_before_id"
     t.integer "reference_point"
     t.integer "perfect_point"
+    t.integer "order", default: 0, null: false
     t.index ["id"], name: "index_problems_on_id", unique: true
     t.index ["problem_must_solve_before_id"], name: "index_problems_on_problem_must_solve_before_id"
   end
