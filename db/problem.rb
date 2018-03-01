@@ -9,7 +9,7 @@ class Problem < ActiveRecord::Base
   has_many :comments, dependent: :destroy, as: :commentable
   has_many :issues,   dependent: :destroy
   has_many :next_problems, class_name: self.to_s, foreign_key: "problem_must_solve_before_id"
-  has_one :first_correct_answer, dependent: :destroy
+  has_many :first_correct_answers, dependent: :destroy
 
   has_and_belongs_to_many :problem_groups, dependent: :nullify
 
