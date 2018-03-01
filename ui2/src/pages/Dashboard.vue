@@ -143,6 +143,9 @@ export default {
         .then(res => {
           this.asyncReload('notices');
           successNotif('投稿しました。');
+          this.notifTitle = '';
+          this.notifBody = '';
+          this.notifPinning = false;
         })
         .catch(err => {
           console.log(err);
