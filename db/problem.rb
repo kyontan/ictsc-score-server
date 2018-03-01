@@ -99,7 +99,7 @@ class Problem < ActiveRecord::Base
 
   def self.del_solvecache(k, v)
     cache = JSON.parse(Problem.redis_client.get("solvecache") || self.calccache)
-    cache[k] = cache[k].select{|e| e[0] != v[0]}
+    cache[k] = cache[k].select{|e| e[0] != v[0]} if cache.keys.include?(k)
     Problem.redis_client.set "solvecache", cache.to_json
   end
 
