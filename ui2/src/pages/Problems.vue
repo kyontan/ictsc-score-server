@@ -143,7 +143,7 @@
           <markdown :value="group.description"></markdown>
         </div>
         <div class="problems d-flex flex-row align-content-center flex-nowrap">
-          <template v-for="problem in problems" v-if="problem.problem_group_ids.includes(group.id)">
+          <template v-for="problem in sortedProblems" v-if="problem.problem_group_ids.includes(group.id)">
             <div class="arrow-next-problem"></div>
             <router-link
               :to="{ name: 'problem-detail', params: { id: '' + problem.id } }"
@@ -468,6 +468,9 @@ export default {
   },
 
   computed: {
+    sortedProblems () {
+      return this.problems.sort((p1, p2) => p1.order - p2.order);
+    },
     problemSelect () {
       return Array.concat([{
         id: null,
