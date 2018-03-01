@@ -5,7 +5,7 @@
       <p>このページは解答一覧画面です。下のボタンを切り替えることで、表示される種類が絞り込めます。</p>
     </div>
     <div class="tools">
-      <button v-on:click="filterSelect = 0" :class="{ active: filterSelect == 0 }" class="btn label-secondary">全て</button>
+      <button v-on:click="filterSelect = 0" :class="{ active: filterSelect == 0 }" class="btn label-secondary">全て表示</button>
       <button v-on:click="filterSelect ^= 1" :class="{ active: filterSelect & 1 }" class="btn label-warning">未提出</button>
       <button v-on:click="filterSelect ^= 2" :class="{ active: filterSelect & 2 }" class="btn label-danger">未採点</button>
       <button v-on:click="filterSelect ^= 4" :class="{ active: filterSelect & 4 }" class="btn label-success">採点済</button>
