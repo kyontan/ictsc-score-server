@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20180301072148) do
     t.datetime "updated_at", null: false
     t.bigint "answer_id", null: false
     t.index ["answer_id"], name: "index_first_correct_answers_on_answer_id"
-    t.index ["problem_id"], name: "index_first_correct_answers_on_problem_id", unique: true
+    t.index ["problem_id"], name: "index_first_correct_answers_on_problem_id"
     t.index ["team_id"], name: "index_first_correct_answers_on_team_id"
   end
 

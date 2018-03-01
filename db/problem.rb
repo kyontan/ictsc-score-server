@@ -52,11 +52,7 @@ class Problem < ActiveRecord::Base
     when ->(role_id) { role_id == ROLE_ID[:participant] || team }
       next none if DateTime.now <= Setting.competition_start_at
 
-      relation = left_outer_joins(problem_must_solve_before: [:first_correct_answer])
-
-      relation.where(problem_must_solve_before_id: nil).or(
-        relation.merge(FirstCorrectAnswer.where.not(team_id: nil))
-      )
+      where(problem_must_solve_before_id: FirstCorrectAnswer.readables.map{|e| e.problem_id} + [nil])
     when ROLE_ID[:viewer]
       all
     else

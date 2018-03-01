@@ -35,20 +35,15 @@ class ProblemRoutes < Sinatra::Base
       @problems = (@problems + Problem.where.not(id: @problems.map{|x| x["id"]}).select(*show_columns).as_json(@as_option)).sort_by{|x| x["id"] }
     end
 
-    # NOTE select "reference_point" is needed because of used in having clause
-    solved_teams_count_by_problem = Problem \
-      .all \
-      .joins(answers: [:score]) \
-      .group(:id, "answers.team_id") \
-      .having("SUM(scores.point) >= problems.reference_point") \
-      .select("id", "answers.team_id", "reference_point") \
-      .inject(Hash.new(0)){|acc, p| acc[p.id] += 1; acc }
+    solved_teams_count_by_problem = FirstCorrectAnswer \
+      .readables \
+      .inject(Hash.new(0)){|a, fca| a[fca.team_id] += 1; a}
 
     cleared_pg_bonuses = Score.cleared_problem_group_bonuses(team_id: current_user&.team_id)
 
     @problems.each do |p|
       remove_secret_info_from(problem: p)
-      p["solved_teams_count"] = solved_teams_count_by_problem[p["id"]]
+      p["solved_teams_count"] = solved_teams_count_by_problem[p["id"]] || 0
       p["answers"]&.each do |a|
         if score = a["score"]
           score["bonus_point"]    = cleared_pg_bonuses[score["id"]] || 0
@@ -73,12 +68,9 @@ class ProblemRoutes < Sinatra::Base
   end
 
   get "/api/problems/:id" do
-    solved_teams_count = Answer \
-      .joins(:score) \
-      .where(problem_id: @problem.id) \
-      .group(:team_id) \
-      .having("SUM(scores.point) >= ?", @problem.reference_point) \
-      .count \
+    solved_teams_count = FirstCorrectAnswer \
+      .where(problem: @problem) \
+      .readables \
       .count
 
     @problem = generate_nested_hash(klass: Problem, by: current_user, as_option: @as_option, params: @with_param, id: params[:id], apply_filter: !(is_admin? || is_viewer?))
