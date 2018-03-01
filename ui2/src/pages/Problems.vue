@@ -156,6 +156,8 @@
                   <div>{{ problemUnlockConditionTitle(problem.problem_must_solve_before_id) }}で解放</div>
                 </div>
               </div>
+              <div v-if="!isStaff && problemSolved(problem.answers)" class="solved">
+              </div>
               <h3>{{ problem.title }}<a v-if="isStaff">({{ problem.creator.name }})</a></h3>
               <div class="bottom-wrapper d-flex align-content-end align-items-end mt-auto">
                 <div class="scores-wrapper mr-auto">
@@ -371,6 +373,16 @@
   margin: auto 1em;
 }
 
+.problem .solved {
+  position: absolute;
+  background: rgba(0, 255, 0, 0.2);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+}
+
 .description {
   margin-bottom: 2rem;
 }
@@ -558,6 +570,10 @@ export default {
 
       if (!pg) return null;
       return pg.flag_icon_url;
+    },
+    problemSolved (answers) {
+      let answer = latestAnswer(answers)
+      return answer && answer.score ? answer.score.solved : false;
     },
     async addProblem () {
       try {

@@ -233,12 +233,13 @@ export class API {
     return RequestMiddleware(req.get(`scores/${id}`))
       .then(res => res.body)
   }
-  static postScore (answer_id, point, req = superagent) {
+  static postScore (answer_id, point, solved, req = superagent) {
     return RequestMiddleware(
       req.post(`scores`)
         .send(JSON.stringify({
           answer_id,
           point,
+          solved,
         }))
     ).then(res => res.body)
   }
