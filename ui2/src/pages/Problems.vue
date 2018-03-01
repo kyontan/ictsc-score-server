@@ -568,6 +568,7 @@ export default {
     },
     problemUnlockConditionTitle (id) {
       var found = this.problems.find(p => p.id === id);
+      if (found && found.team_private && found.title) return `「${found.title}」で基準を満たすこと`;
       if (found && found.title) return `「${found.title}」で基準を満たすチームが表われること`;
       if (found) return '前の問題で基準を満たすチームが表われること';
       else return '前の問題';
