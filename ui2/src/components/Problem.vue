@@ -28,8 +28,8 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label">グループ<br />(複数選択可)</label>
-            <div class="col-sm-9">
+            <label class="col-sm-2 col-form-label">グループ<br/>(複数選択可)</label>
+            <div class="col-sm-10">
               <select class="form-control" v-model="problem.problem_group_ids" multiple>
                 <option v-for="group in problemGroups" :value="group.id">{{ group.name }}</option>
               </select>
