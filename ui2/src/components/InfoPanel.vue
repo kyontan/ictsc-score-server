@@ -72,7 +72,7 @@ export default {
       try {
         this.sumPurePoint = ((e) => e.perfect_point ? e.perfect_point : 0)(latestAnswer(val))
 
-        var scores = answers => ((e) => e.score ? e.score.point : 0)(latestAnswer(answers));
+        var scores = answers => ((e) => e && e.score ? e.score.point : 0)(latestAnswer(answers));
         this.scoredPurePoint = val
           .reduce((p, n) => p + scores(n.answers), 0);
       } catch (err) {

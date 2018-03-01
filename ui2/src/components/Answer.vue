@@ -7,6 +7,8 @@
             <input v-model="newPoint" type="number" class="form-control">
           </div>
           <div class="col-6">
+            <input type="checkbox" id="checkbox" v-model="solved">
+            <label for="checkbox">基準</label>
             <button v-on:click="submitPoint()" type="submit" class="btn btn-primary">採点</button>
           </div>
         </div>
@@ -108,10 +110,12 @@ export default {
   watch: {
     value (val) {
       this.newPoint = (this.value.score && this.value.score.point) || 0;
+      this.solved = (this.value.score && this.value.score.solved) || false;
     },
   },
   mounted () {
     this.newPoint = (this.value.score && this.value.score.point) || 0;
+    this.solved = (this.value.score && this.value.score.solved) || false;
     this.interval_id = setInterval(() => { this.now = new Date() }, 1000);
   },
   destroyed () {
@@ -125,9 +129,10 @@ export default {
       if (this.value.score && this.value.score.id) {
         postOrPut = API.putScore(this.value.score.id, Object.assign({}, this.value.score, {
           point: this.newPoint,
+          solved: this.solved,
         }))
       } else {
-        postOrPut = API.postScore(this.value.id, this.newPoint)
+        postOrPut = API.postScore(this.value.id, this.newPoint, this.solved)
       }
 
       postOrPut
