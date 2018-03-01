@@ -35,6 +35,7 @@ class Score < ActiveRecord::Base
       # pg: problem_group
       problems_count_in_pg = problem_group.problems.count
 
+      # TODO: solved flag
       relation_problems_solved = Score \
         .joins(answer: { problem: { problem_groups: {}}}) \
         .where(answers: { team_id: answer.team_id, problems: { problem_groups: { id: problem_group.id } } }) \
@@ -59,6 +60,7 @@ class Score < ActiveRecord::Base
   # @return { team_id: { problem_group_id: completing_bonus_point } }  (when with_tid: true)
   # @return { problem_group_id: completing_bonus_point }               (when with_tid: false)
   def self.cleared_problem_group_bonuses(team_id: nil, with_tid: false)
+    # TODO: solved flag
     # reference_points[problem_group_id][problem_id] = reference_point
     reference_points = Problem.joins(:problem_groups) \
       .all \
@@ -109,14 +111,12 @@ class Score < ActiveRecord::Base
   end
 
   def refresh_first_correct_answer
-    require 'pry'
-    # binding.pry if answer.score.solved
     problem = answer.problem
     team = answer.team
     if answer.score.solved
-      FirstCorrectAnswer.create(team: team, problem: problem, answer: answer) if ! FirstCorrectAnswer.where(team: team, problem: problem)
+      FirstCorrectAnswer.create(team: team, problem: problem, answer: answer) unless FirstCorrectAnswer.where(team: team, problem: problem)
     else
-      FirstCorrectAnswer.delete(team: team, problem: problem, answer: answer) # 採点修正
+      FirstCorrectAnswer.delete(team: team, problem: problem) # 採点修正
       ans = Answer.where(team: team, problem: problem).joins(:score).where(scores: {solved: true}).order(:created_at).first
       FirstCorrectAnswer.create(team: team, problem: problem, answer: ans) if ans
     end
