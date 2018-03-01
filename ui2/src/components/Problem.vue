@@ -20,6 +20,12 @@
       <div class="point">
         <template v-if="edit && (isWriter || isAdmin)">
           <div class="form-group row">
+            <label class="col-2 col-form-label">チーム限定公開</label>
+            <div class="col-10">
+              <input type="checkbox" v-model="problem.team_private">
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-2 col-form-label">依存問題</label>
             <div class="col-10">
               <select class="form-control" v-model="problem.problem_must_solve_before_id">

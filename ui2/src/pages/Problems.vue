@@ -42,6 +42,12 @@
           </div>
         </div>
         <div class="form-group row">
+          <label class="col-sm-3 sol-form-label">チーム限定公開</label>
+          <div class="col-sm-9">
+            <input type="checkbox" v-model="newProblemObj.team_private">
+          </div>
+        </div>
+        <div class="form-group row">
           <label class="col-sm-3 col-form-label">グループ<br />(複数選択可)</label>
           <div class="col-sm-9">
             <select class="form-control" v-model="newProblemObj.problem_group_ids" multiple>
@@ -443,6 +449,7 @@ export default {
         problem_group_ids: [],
         order: 0,
         problem_must_solve_before_id: null,
+        team_private: false,
       },
       newGroupObj: {
         name: '',
