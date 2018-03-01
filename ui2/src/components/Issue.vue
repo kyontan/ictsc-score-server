@@ -30,7 +30,6 @@
     </div>
     <div class="tail">
       <div v-for="item in tailComment" class="item" :class="{ admin: !item.member || item.member.role_id != 4 }">
-        <p>{{ item.member }}</p>
         <div class="comment">
           <markdown :value="item.text"></markdown>
         </div>
