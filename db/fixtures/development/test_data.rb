@@ -167,6 +167,7 @@ Team.all.each do |team|
         date = last_answer.created_at + rand(1200).seconds
         s.created_at = date
         s.updated_at = date
+        s.solved     = point >= p.reference_point
       end.first
 
       next if is_rabbithouse
@@ -197,6 +198,7 @@ Team.all.each do |team|
         date = last_answer.created_at + rand(1200).seconds
         s.created_at = date
         s.updated_at = date
+        s.solved     = second_point >= p.reference_point
       end
     end
   end
