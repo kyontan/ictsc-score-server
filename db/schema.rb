@@ -124,8 +124,8 @@ ActiveRecord::Schema.define(version: 20180301163535) do
     t.integer "problem_must_solve_before_id"
     t.integer "reference_point"
     t.integer "perfect_point"
-    t.integer "order", default: 0, null: false
     t.boolean "team_private", default: false, null: false
+    t.integer "order", default: 0, null: false
     t.index ["id"], name: "index_problems_on_id", unique: true
     t.index ["problem_must_solve_before_id"], name: "index_problems_on_problem_must_solve_before_id"
   end
