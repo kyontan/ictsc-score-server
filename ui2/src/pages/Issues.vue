@@ -129,7 +129,7 @@ export default {
   },
   data () {
     return {
-      filterSelect: 0,
+      filterSelect: 1,
     }
   },
   asyncData: {
@@ -196,4 +196,3 @@ export default {
   },
 }
 </script>
-

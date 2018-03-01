@@ -87,7 +87,7 @@ export default {
   name: 'answers',
   data () {
     return {
-      filterSelect: 0,
+      filterSelect: 2,
     }
   },
   asyncData: {
@@ -138,4 +138,3 @@ export default {
   },
 }
 </script>
-
