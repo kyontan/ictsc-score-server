@@ -25,6 +25,7 @@
               :to="{name: 'problem-answers', params: {id: problem.id, team: team.id}}"
               :class="'team status-' + status(problem.answers, team.id, problem.id)">
               {{ team.id }}. {{ team.name }} {{ score(problem.answers, team.id, problem.id) }}点
+              {{ scoringlimit[problem.id][team.id] }}
             </router-link>
           </div>
         </div>
@@ -82,6 +83,7 @@
 <script>
 import { SET_TITLE } from '../store/'
 import { API } from '../utils/Api'
+import { mapGetters } from 'vuex'
 import { latestAnswer } from '../utils/Filters'
 
 export default {
@@ -89,6 +91,7 @@ export default {
   data () {
     return {
       filterSelect: 2,
+      scoringlimit: {},
     }
   },
   asyncData: {
@@ -102,6 +105,9 @@ export default {
     },
   },
   computed: {
+    ...mapGetters([
+      'contest',
+    ]),
   },
   watch: {
   },
@@ -109,6 +115,18 @@ export default {
     this.$store.dispatch(SET_TITLE, '解答と採点');
   },
   destroyed () {
+  },
+  updated () {
+    this.problems.forEach((problem) => {
+      if (this.anyMatchesFilter(problem.answers, problem.id)) {
+        this.scoringlimit[problem.id] = {};
+        this.teams.forEach((team) => {
+          if (this.matchesFilter(problem.answers, team.id, problem.id)) {
+            this.scoringlimit[problem.id][team.id] = this.contest.answer_reply_delay_sec;
+          }
+        });
+      }
+    });
   },
   methods: {
     anyMatchesFilter (answers, problemId) {
