@@ -36,7 +36,7 @@ class ProblemRoutes < Sinatra::Base
     end
 
     solved_teams_count_by_problem = FirstCorrectAnswer \
-      .readables(action: "for_count") \
+      .readables(user: current_user, action: "for_count") \
       .inject(Hash.new(0)){|a, fca| a[fca.problem_id] += 1; a}
 
     cleared_pg_bonuses = Score.cleared_problem_group_bonuses(team_id: current_user&.team_id)
@@ -69,8 +69,8 @@ class ProblemRoutes < Sinatra::Base
 
   get "/api/problems/:id" do
     solved_teams_count = FirstCorrectAnswer \
+      .readables(user: current_user, action: "for_count") \
       .where(problem: @problem) \
-      .readables(action: "for_count") \
       .count
 
     @problem = generate_nested_hash(klass: Problem, by: current_user, as_option: @as_option, params: @with_param, id: params[:id], apply_filter: !(is_admin? || is_viewer?))
