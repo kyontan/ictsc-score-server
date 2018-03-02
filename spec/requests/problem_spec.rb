@@ -4,9 +4,7 @@ describe Problem do
   include ApiHelpers
 
   before(:each) {
-    time = DateTime.parse("2017-07-07T21:00:00+09:00")
-    allow(DateTime).to receive(:now).and_return(time)
-    allow(Setting).to receive(:competition_start_at).and_return(time - 3.year)
+    allow(Setting).to receive(:competition_start_at).and_return(DateTime.now - 3.year)
   }
 
   describe 'GET /api/problems' do
@@ -42,9 +40,21 @@ describe Problem do
       by_writer      { is_expected.to match_array expected_keys }
       by_admin       { is_expected.to match_array expected_keys }
 
-      describe '#solved_teams_count' do
-        let!(:score_by_other_team_a) { create(:score, point: problem.reference_point, answer: create(:answer, problem: problem)) } # solved
-        let!(:score_by_other_team_b) { create(:score, point: problem.reference_point - 1, answer: create(:answer, problem: problem)) } # not solved
+      describe '#solved_teams_count (delay)' do
+        let!(:score_by_other_team_a) { create(:score, point: problem.reference_point, solved: true, answer: create(:answer, problem: problem)) } # solved
+        let!(:score_by_other_team_b) { create(:score, point: problem.reference_point - 1, solved: false, answer: create(:answer, problem: problem)) } # not solved
+        subject { json_response_problem['solved_teams_count'] }
+
+        by_viewer      { is_expected.to eq 1 }
+        by_participant { is_expected.to eq 0 }
+        by_writer      { is_expected.to eq 1 }
+        by_admin       { is_expected.to eq 1 }
+      end
+
+      describe '#solved_teams_count (opened)' do
+        delayed = DateTime.now - Setting.answer_reply_delay_sec.seconds
+        let!(:score_by_other_team_a) { create(:score, point: problem.reference_point, solved: true, answer: create(:answer, problem: problem, created_at: delayed)) } # solved
+        let!(:score_by_other_team_b) { create(:score, point: problem.reference_point - 1, solved: false, answer: create(:answer, problem: problem, created_at: delayed)) } # not solve subject
         subject { json_response_problem['solved_teams_count'] }
 
         by_viewer      { is_expected.to eq 1 }
