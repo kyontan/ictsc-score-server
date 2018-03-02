@@ -548,14 +548,20 @@ export default {
         bonus: 0,
         subtotal: 0,
       }
-      if (!this.session.member) return nothing;
-      if (!answers) return nothing;
+      if (!this.session.member || !answers) return nothing;
+      if (answers.length === 0) {
+        return {
+          pure: '---',
+          bonus: '---',
+          subtotal: '---',
+        }
+      }
       if (this.contest && (new Date(this.contest.competition_end_at) < Date.now())) return nothing;
       return ((e) => {
         return {
-          pure: e && e.score ? e.score.point : 0,
-          bonus: e && e.score ? e.score.bonus_point : 0,
-          subtotal: e && e.score ? e.score.subtotal_point : 0
+          pure: e && e.score ? e.score.point : '採点中',
+          bonus: e && e.score ? e.score.bonus_point : '採点中',
+          subtotal: e && e.score ? e.score.subtotal_point : '採点中'
         }
       })(latestAnswer(answers))
     },
