@@ -5,7 +5,7 @@ class Answer < ActiveRecord::Base
   validates :score,   presence: true, if: Proc.new {|answer| not answer&.score&.id.nil? }
 
   belongs_to :problem
-  has_one :score
+  has_one :score,     dependent: :destroy
   belongs_to :team
 
   def notification_payload(state: :created, **data)
