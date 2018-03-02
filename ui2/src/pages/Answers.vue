@@ -24,7 +24,14 @@
             <router-link
               :to="{name: 'problem-answers', params: {id: problem.id, team: team.id}}"
               :class="'team status-' + status(problem.answers, team.id, problem.id)">
-              {{ team.id }}. {{ team.name }} {{ score(problem.answers, team.id, problem.id) }}点
+              {{ team.id }}. {{ team.name }} {{ score(problem.answers, team.id, problem.id) }}
+              <font color="black" v-if="status(problem.answers, team.id, problem.id) == 2">
+                (採点期限: 
+              {{ Date.parse(problem.answers.reduce((p, n) => Date.parse(p.updated_at) < Date.parse(n.updated_at) ? n : p, {updated_at: 0}).created_at)
+                + contest.answer_reply_delay_sec * 1000
+                - now | tickDuration("mm:ss") }}
+                )
+              </font>
             </router-link>
           </div>
         </div>
@@ -82,13 +89,19 @@
 <script>
 import { SET_TITLE } from '../store/'
 import { API } from '../utils/Api'
-import { latestAnswer } from '../utils/Filters'
+import { mapGetters } from 'vuex'
+import { tickDuration, latestAnswer } from '../utils/Filters'
 
 export default {
   name: 'answers',
+  filters: {
+    tickDuration,
+  },
   data () {
     return {
       filterSelect: 2,
+      scoringlimit: {},
+      currentDate: new Date(),
     }
   },
   asyncData: {
@@ -102,11 +115,28 @@ export default {
     },
   },
   computed: {
+    ...mapGetters([
+      'contest',
+    ]),
+    now: function () {
+      return this.currentDate.valueOf();
+    },
   },
   watch: {
   },
   mounted () {
     this.$store.dispatch(SET_TITLE, '解答と採点');
+
+    var refreshDate = () => setTimeout(() => {
+      this.currentDate = Date.now();
+      refreshDate();
+    }, 200);
+    refreshDate();
+  },
+  ready () {
+    setInterval(() => {
+      this.now = Date.now();
+    }, 1000);
   },
   destroyed () {
   },

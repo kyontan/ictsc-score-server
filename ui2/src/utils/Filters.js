@@ -53,9 +53,13 @@ export function dateRelative (date) {
     .fromNow();
 }
 
-export function tickDuration (date) {
-  return moment.utc(date)
-    .format('HH:mm:ss')
+export function tickDuration (date, format) {
+  if (parseInt(date) !== date) return date;
+  if (date >= 0) {
+    return moment.utc(date).format(format);
+  } else {
+    return '-' + moment.utc(-date).format(format);
+  }
 }
 
 export function latestAnswer (ans) {
