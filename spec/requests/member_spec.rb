@@ -22,10 +22,10 @@ describe Member do
       describe '#size' do
         subject { json_response.map{|x| x["role_id"] }.uniq }
         by_nologin     { is_expected.to match_array [] }
-        by_viewer      { is_expected.to match_array [viewer, participant].map(&:role_id) }
-        by_participant { is_expected.to match_array [viewer, participant].map(&:role_id) }
-        by_writer      { is_expected.to match_array [viewer, participant, writer].map(&:role_id) }
-        by_admin       { is_expected.to match_array [viewer, participant, writer, admin].map(&:role_id) }
+        by_participant { is_expected.to match_array [participant].map(&:role_id) }
+        by_viewer      { is_expected.to match_array [participant, viewer, writer].map(&:role_id) }
+        by_writer      { is_expected.to match_array [participant, viewer, writer].map(&:role_id) }
+        by_admin       { is_expected.to match_array [participant, viewer, writer, admin].map(&:role_id) }
       end
     end
   end
@@ -41,8 +41,8 @@ describe Member do
       subject { response.status }
 
       by_nologin     { is_expected.to eq 404 }
+      by_participant { is_expected.to eq 404 }
       by_viewer      { is_expected.to eq 200 }
-      by_participant { is_expected.to eq 200 }
       by_writer      { is_expected.to eq 200 }
       by_admin       { is_expected.to eq 200 }
     end
@@ -63,8 +63,8 @@ describe Member do
       subject { response.status }
 
       by_nologin     { is_expected.to eq 404 }
-      by_viewer      { is_expected.to eq 404 }
       by_participant { is_expected.to eq 404 }
+      by_viewer      { is_expected.to eq 200 }
       by_writer      { is_expected.to eq 200 }
       by_admin       { is_expected.to eq 200 }
     end
