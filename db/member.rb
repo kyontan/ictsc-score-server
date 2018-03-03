@@ -58,8 +58,10 @@ class Member < ActiveRecord::Base
     case user&.role_id
     when ROLE_ID[:admin]
       all
-    when ROLE_ID[:writer], ROLE_ID[:participant], ROLE_ID[:viewer]
-      joins(:role).where("roles.rank >= ?", user.role.rank)
+    when ROLE_ID[:writer], ROLE_ID[:viewer]
+      joins(:role).where("roles.id != ?", ROLE_ID[:admin])
+    when ROLE_ID[:participant]
+      joins(:role).where("roles.id = ?", ROLE_ID[:participant])
     else # nologin, ...
       none
     end
